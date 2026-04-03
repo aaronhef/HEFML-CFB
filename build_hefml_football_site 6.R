@@ -371,8 +371,8 @@ build_hefml_football_site <- function(predictions_2025,
 
   # mild jitter to reduce overlap (visual only)
   set.seed(2025)
-  xj <- jitter(x, amount = x_pad * 0.10)
-  yj <- jitter(y, amount = y_pad * 0.10)
+  xj <- jitter(x, amount = x_pad * 0.15)
+  yj <- jitter(y, amount = y_pad * 0.15)
 
   # base plot with white axes / labels / border, transparent bg
   graphics::plot(
@@ -415,7 +415,7 @@ build_hefml_football_site <- function(predictions_2025,
     y_in_per_data <- pin[2] / yrng
 
     # small logos: about 0.75% of x-range (data units)
-    w_data <- xrng * 0.05
+    w_data <- xrng * 0.15
 
     for (i in seq_along(xj)) {
       logo_url <- pg_df$logo[i]
