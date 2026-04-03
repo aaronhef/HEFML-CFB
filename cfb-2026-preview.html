@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2026 College Football Season Preview — HefML</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --gold:#BA7517;--gold-mid:#EF9F27;
+  --bg:#0d0d0d;--bg2:#141414;--bg3:#1a1a1a;--bg4:#222222;
+  --border:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.12);
+  --text:#f0ede8;--text2:#9a9690;--text3:#5c5a56;
+  --win:#3B6D11;--win-text:#C0DD97;--loss:#791F1F;--loss-text:#F09595;
+  --mono:'DM Mono',monospace;--sans:'DM Sans',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;min-height:100vh}
+.site-header{border-bottom:1px solid var(--border);padding:2.5rem 2rem 2rem;position:relative;overflow:hidden}
+.site-header::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold-mid),transparent)}
+.header-inner{max-width:1200px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.15em;text-transform:uppercase;margin-bottom:.6rem}
+h1{font-size:clamp(26px,4vw,42px);font-weight:300;color:var(--text);letter-spacing:-.02em;line-height:1.1}
+h1 span{color:var(--gold-mid);font-weight:500}
+.header-meta{margin-top:.75rem;color:var(--text2);font-size:13px;display:flex;gap:2rem;flex-wrap:wrap}
+.header-meta strong{color:var(--text)}
+.main{max-width:1200px;margin:0 auto;padding:2rem}
+.section-head{display:flex;align-items:baseline;gap:1rem;margin:3rem 0 1.25rem;padding-bottom:.6rem;border-bottom:.5px solid var(--border-mid)}
+.section-head h2{font-size:13px;font-weight:500;color:var(--text2);text-transform:uppercase;letter-spacing:.1em;font-family:var(--mono);white-space:nowrap}
+.section-head .rule{flex:1;height:.5px;background:var(--border)}
+.stat-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:2rem}
+.stat-box{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1rem 1.1rem}
+.stat-box .label{font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:4px}
+.stat-box .value{font-size:26px;font-weight:300;color:var(--text)}
+.stat-box .note{font-size:11px;color:var(--text2);margin-top:2px}
+.power-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+.power-card{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:.9rem 1rem}
+.power-card.top{border-color:rgba(186,117,23,.4);background:rgba(186,117,23,.05)}
+.power-rank{font-family:var(--mono);font-size:10px;color:var(--text3);margin-bottom:3px}
+.power-team{font-size:14px;font-weight:500;color:var(--text)}
+.power-conf-label{font-size:11px;color:var(--text3)}
+.power-sp{font-size:20px;font-weight:300;color:var(--gold-mid);margin-top:6px;font-family:var(--mono)}
+.power-sp-unit{font-size:10px;color:var(--text3)}
+.power-proj{font-size:11px;color:var(--text2);margin-top:3px;font-family:var(--mono)}
+.conf-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.conf-card{background:var(--bg2);border:.5px solid var(--border);border-radius:8px;padding:1rem 1.1rem}
+.conf-title{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.08em;text-transform:uppercase;margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:.5px solid var(--border)}
+.conf-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.conf-row .name{font-size:13px;color:var(--text)}
+.conf-row .name.leader{font-weight:500;color:var(--gold-mid)}
+.conf-row .rec{font-family:var(--mono);font-size:12px;color:var(--text2)}
+.win-bar{height:2px;background:var(--bg4);border-radius:1px;margin-top:2px}
+.win-fill{height:2px;background:var(--gold);border-radius:1px}
+.matchup-list{display:flex;flex-direction:column;gap:8px}
+.matchup-card{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:12px;padding:10px 16px;background:var(--bg2);border:.5px solid var(--border);border-radius:8px}
+.matchup-card.tossup{border-color:rgba(186,117,23,.35)}
+.matchup-team{font-size:13px;color:var(--text)}
+.matchup-conf-tag{font-size:10px;color:var(--text3);font-family:var(--mono)}
+.matchup-center{text-align:center}
+.matchup-wk{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.matchup-spread{font-family:var(--mono);font-size:12px;color:var(--text2);margin-top:2px}
+.tossup-badge{display:inline-block;background:rgba(186,117,23,.15);color:var(--gold);font-size:9px;padding:1px 5px;border-radius:3px;font-family:var(--mono);margin-left:4px}
+.blowout-table{width:100%;border-collapse:collapse;font-size:12px}
+.blowout-table th{text-align:left;color:var(--text3);font-weight:400;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border-bottom:.5px solid var(--border-mid)}
+.blowout-table td{padding:7px 10px;border-bottom:.5px solid var(--border);color:var(--text)}
+.blowout-table tr:last-child td{border-bottom:none}
+.spread-val{font-family:var(--mono);color:var(--gold-mid);font-weight:500}
+.prob-val2{font-family:var(--mono);color:var(--text2)}
+.team-filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1.5rem}
+.filter-btn{background:var(--bg2);border:.5px solid var(--border);border-radius:5px;color:var(--text2);font-size:11px;font-family:var(--mono);padding:4px 10px;cursor:pointer;transition:all .12s;white-space:nowrap}
+.filter-btn:hover,.filter-btn.active{background:rgba(186,117,23,.12);border-color:rgba(186,117,23,.5);color:var(--gold)}
+.filter-btn.active{font-weight:500}
+.sched-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:.5px solid var(--border);flex-wrap:wrap;gap:.5rem}
+.sched-team-name{font-size:22px;font-weight:500;color:var(--text);letter-spacing:-.01em}
+.sched-meta{display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap}
+.sched-record{font-family:var(--mono);font-size:18px;color:var(--gold-mid)}
+.sched-table{width:100%;border-collapse:collapse;font-size:12px}
+.sched-table thead tr{border-bottom:.5px solid var(--border-mid)}
+.sched-table th{text-align:left;color:var(--text3);font-weight:400;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 8px}
+.sched-table td{padding:7px 8px;border-bottom:.5px solid var(--border);color:var(--text);vertical-align:middle}
+.sched-table tr:last-child td{border-bottom:none}
+.sched-table tr:hover td{background:var(--bg3)}
+.wk-cell{font-family:var(--mono);color:var(--text3);width:28px}
+.loc-cell{font-family:var(--mono);font-size:11px;width:20px;text-align:center}
+.opp-conf-cell{font-family:var(--mono);font-size:10px;color:var(--text3)}
+.margin-cell{font-family:var(--mono);font-size:12px;text-align:right;white-space:nowrap}
+.m-pos{color:#97C459}.m-neg{color:#F09595}.m-close{color:var(--gold)}
+.prob-cell{width:120px}
+.prob-bar-wrap{display:flex;align-items:center;gap:6px}
+.prob-bar-bg{flex:1;height:3px;background:var(--bg4);border-radius:2px}
+.prob-bar-fill{height:3px;border-radius:2px}
+.p-win{background:#639922}.p-loss{background:#A32D2D}
+.prob-val{font-family:var(--mono);font-size:10px;color:var(--text3);min-width:34px;text-align:right}
+.result-cell{width:32px;text-align:center}
+.result-w{display:inline-block;background:var(--win);color:var(--win-text);font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 6px;border-radius:3px}
+.result-l{display:inline-block;background:var(--loss);color:var(--loss-text);font-family:var(--mono);font-size:10px;font-weight:500;padding:2px 6px;border-radius:3px}
+.b10-tag{display:inline-block;background:rgba(186,117,23,.1);color:var(--gold);font-size:9px;font-family:var(--mono);padding:1px 4px;border-radius:2px;margin-left:5px;vertical-align:middle}
+.footer{border-top:.5px solid var(--border);padding:1.5rem 2rem;margin-top:4rem;text-align:center}
+.footer-inner{max-width:1200px;margin:0 auto;font-family:var(--mono);font-size:10px;color:var(--text3);line-height:2}
+@media(max-width:900px){.power-grid{grid-template-columns:repeat(3,1fr)}.conf-grid{grid-template-columns:repeat(2,1fr)}.stat-strip{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.main{padding:1rem}.power-grid{grid-template-columns:repeat(2,1fr)}.conf-grid{grid-template-columns:1fr}.stat-strip{grid-template-columns:repeat(2,1fr)}.matchup-card{grid-template-columns:1fr;gap:4px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="eyebrow">HefML · CatBoost + Particle Filter · 2026 Regular Season</div>
+    <h1>2026 College Football <span>Season Preview</span></h1>
+    <div class="header-meta">
+      <span><strong>569</strong> games modeled</span>
+      <span><strong>Weeks 1–13</strong> regular season</span>
+      <span><strong>SP+, PPA, SBI, talent</strong> inputs</span>
+      <span><strong>Ensemble</strong> cfbone × blue × gryphon</span>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+
+  <div class="stat-strip" style="margin-top:2rem">
+    <div class="stat-box"><div class="label">games modeled</div><div class="value">569</div><div class="note">Weeks 1–13, FBS</div></div>
+    <div class="stat-box"><div class="label">perfect proj. records</div><div class="value">6</div><div class="note">OSU · UGA · TTU · ND · UNLV · Liberty</div></div>
+    <div class="stat-box"><div class="label">tossup games (&lt;2pt)</div><div class="value">15+</div><div class="note">Across all conferences</div></div>
+    <div class="stat-box"><div class="label">biggest projected margin</div><div class="value">57.8</div><div class="note">Ohio State vs Ball State, Wk 1</div></div>
+  </div>
+
+  <div class="section-head"><h2>SP+ Power Rankings — Top 15</h2><div class="rule"></div></div>
+  <div class="power-grid">
+    <div class="power-card top"><div class="power-rank">#1</div><div class="power-team">Ohio State</div><div class="power-conf-label">Big Ten</div><div class="power-sp">31.8 <span class="power-sp-unit">SP+</span></div><div class="power-proj">Proj: 12-0</div></div>
+    <div class="power-card"><div class="power-rank">#2</div><div class="power-team">Oregon</div><div class="power-conf-label">Big Ten</div><div class="power-sp">28.3</div><div class="power-proj">Proj: 10-1</div></div>
+    <div class="power-card"><div class="power-rank">#3</div><div class="power-team">Notre Dame</div><div class="power-conf-label">Independent</div><div class="power-sp">25.8</div><div class="power-proj">Proj: 11-0</div></div>
+    <div class="power-card"><div class="power-rank">#4</div><div class="power-team">Georgia</div><div class="power-conf-label">SEC</div><div class="power-sp">25.5</div><div class="power-proj">Proj: 11-0</div></div>
+    <div class="power-card"><div class="power-rank">#5</div><div class="power-team">Indiana</div><div class="power-conf-label">Big Ten</div><div class="power-sp">24.5</div><div class="power-proj">Proj: 10-1</div></div>
+    <div class="power-card"><div class="power-rank">#6</div><div class="power-team">Texas</div><div class="power-conf-label">SEC</div><div class="power-sp">23.7</div><div class="power-proj">Proj: 11-1</div></div>
+    <div class="power-card"><div class="power-rank">#7</div><div class="power-team">Texas Tech</div><div class="power-conf-label">Big 12</div><div class="power-sp">23.1</div><div class="power-proj">Proj: 11-0</div></div>
+    <div class="power-card"><div class="power-rank">#8</div><div class="power-team">Miami</div><div class="power-conf-label">ACC</div><div class="power-sp">21.0</div><div class="power-proj">Proj: 9-1</div></div>
+    <div class="power-card"><div class="power-rank">#9</div><div class="power-team">Texas A&amp;M</div><div class="power-conf-label">SEC</div><div class="power-sp">20.3</div><div class="power-proj">Proj: ~7-4</div></div>
+    <div class="power-card"><div class="power-rank">#10</div><div class="power-team">LSU</div><div class="power-conf-label">SEC</div><div class="power-sp">20.2</div><div class="power-proj">Proj: 10-1</div></div>
+    <div class="power-card"><div class="power-rank">#11</div><div class="power-team">USC</div><div class="power-conf-label">Big Ten</div><div class="power-sp">16.8</div><div class="power-proj">Proj: 7-4</div></div>
+    <div class="power-card"><div class="power-rank">#12</div><div class="power-team">Michigan</div><div class="power-conf-label">Big Ten</div><div class="power-sp">16.1</div><div class="power-proj">Proj: 9-3</div></div>
+    <div class="power-card"><div class="power-rank">#13</div><div class="power-team">Penn State</div><div class="power-conf-label">Big Ten</div><div class="power-sp">15.7</div><div class="power-proj">Proj: 10-2</div></div>
+    <div class="power-card"><div class="power-rank">#14</div><div class="power-team">Washington</div><div class="power-conf-label">Big Ten</div><div class="power-sp">14.5</div><div class="power-proj">Proj: 8-3</div></div>
+    <div class="power-card"><div class="power-rank">#15</div><div class="power-team">Iowa</div><div class="power-conf-label">Big Ten</div><div class="power-sp">13.6</div><div class="power-proj">Proj: 8-3</div></div>
+  </div>
+
+  <div class="section-head"><h2>Projected Conference Standings</h2><div class="rule"></div></div>
+  <div class="conf-grid">
+    <div class="conf-card">
+      <div class="conf-title">SEC</div>
+      <div class="conf-row"><span class="name leader">Georgia</span><span class="rec">11-0</span></div><div class="win-bar"><div class="win-fill" style="width:100%"></div></div>
+      <div class="conf-row"><span class="name">Texas</span><span class="rec">11-1</span></div><div class="win-bar"><div class="win-fill" style="width:92%"></div></div>
+      <div class="conf-row"><span class="name">LSU</span><span class="rec">10-1</span></div><div class="win-bar"><div class="win-fill" style="width:91%"></div></div>
+      <div class="conf-row"><span class="name">Alabama</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">Florida</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">Tennessee</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+    </div>
+    <div class="conf-card">
+      <div class="conf-title">Big Ten</div>
+      <div class="conf-row"><span class="name leader">Ohio State</span><span class="rec">12-0</span></div><div class="win-bar"><div class="win-fill" style="width:100%"></div></div>
+      <div class="conf-row"><span class="name">Indiana</span><span class="rec">10-1</span></div><div class="win-bar"><div class="win-fill" style="width:83%"></div></div>
+      <div class="conf-row"><span class="name">Oregon</span><span class="rec">10-1</span></div><div class="win-bar"><div class="win-fill" style="width:83%"></div></div>
+      <div class="conf-row"><span class="name">Penn State</span><span class="rec">10-2</span></div><div class="win-bar"><div class="win-fill" style="width:83%"></div></div>
+      <div class="conf-row"><span class="name">Michigan</span><span class="rec">9-3</span></div><div class="win-bar"><div class="win-fill" style="width:75%"></div></div>
+      <div class="conf-row"><span class="name">Illinois</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+    </div>
+    <div class="conf-card">
+      <div class="conf-title">Big 12</div>
+      <div class="conf-row"><span class="name leader">Texas Tech</span><span class="rec">11-0</span></div><div class="win-bar"><div class="win-fill" style="width:100%"></div></div>
+      <div class="conf-row"><span class="name">BYU</span><span class="rec">10-1</span></div><div class="win-bar"><div class="win-fill" style="width:91%"></div></div>
+      <div class="conf-row"><span class="name">Kansas State</span><span class="rec">10-1</span></div><div class="win-bar"><div class="win-fill" style="width:91%"></div></div>
+      <div class="conf-row"><span class="name">Arizona</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">Houston</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">TCU</span><span class="rec">8-3</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+    </div>
+    <div class="conf-card">
+      <div class="conf-title">ACC</div>
+      <div class="conf-row"><span class="name leader">Louisville</span><span class="rec">9-1</span></div><div class="win-bar"><div class="win-fill" style="width:90%"></div></div>
+      <div class="conf-row"><span class="name">Miami</span><span class="rec">9-1</span></div><div class="win-bar"><div class="win-fill" style="width:90%"></div></div>
+      <div class="conf-row"><span class="name">Clemson</span><span class="rec">9-2</span></div><div class="win-bar"><div class="win-fill" style="width:82%"></div></div>
+      <div class="conf-row"><span class="name">SMU</span><span class="rec">7-3</span></div><div class="win-bar"><div class="win-fill" style="width:70%"></div></div>
+      <div class="conf-row"><span class="name">Virginia</span><span class="rec">7-3</span></div><div class="win-bar"><div class="win-fill" style="width:70%"></div></div>
+      <div class="conf-row"><span class="name">Virginia Tech</span><span class="rec">7-3</span></div><div class="win-bar"><div class="win-fill" style="width:70%"></div></div>
+    </div>
+    <div class="conf-card">
+      <div class="conf-title">Pac-12 / Mtn West</div>
+      <div class="conf-row"><span class="name leader">Boise State</span><span class="rec">9-1</span></div><div class="win-bar"><div class="win-fill" style="width:90%"></div></div>
+      <div class="conf-row"><span class="name leader">UNLV</span><span class="rec">8-0</span></div><div class="win-bar"><div class="win-fill" style="width:100%"></div></div>
+      <div class="conf-row"><span class="name">San Diego State</span><span class="rec">8-2</span></div><div class="win-bar"><div class="win-fill" style="width:80%"></div></div>
+      <div class="conf-row"><span class="name">New Mexico</span><span class="rec">5-2</span></div><div class="win-bar"><div class="win-fill" style="width:71%"></div></div>
+      <div class="conf-row"><span class="name">Fresno State</span><span class="rec">5-4</span></div><div class="win-bar"><div class="win-fill" style="width:56%"></div></div>
+      <div class="conf-row"><span class="name">Wyoming</span><span class="rec">4-3</span></div><div class="win-bar"><div class="win-fill" style="width:57%"></div></div>
+    </div>
+    <div class="conf-card">
+      <div class="conf-title">Group of 5 Leaders</div>
+      <div class="conf-row"><span class="name leader">UTSA</span><span class="rec">9-1 (AAC)</span></div><div class="win-bar"><div class="win-fill" style="width:90%"></div></div>
+      <div class="conf-row"><span class="name">Army</span><span class="rec">8-1 (AAC)</span></div><div class="win-bar"><div class="win-fill" style="width:89%"></div></div>
+      <div class="conf-row"><span class="name">Miami (OH)</span><span class="rec">8-1 (MAC)</span></div><div class="win-bar"><div class="win-fill" style="width:89%"></div></div>
+      <div class="conf-row"><span class="name">South Florida</span><span class="rec">8-3 (AAC)</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">W. Michigan</span><span class="rec">8-3 (MAC)</span></div><div class="win-bar"><div class="win-fill" style="width:73%"></div></div>
+      <div class="conf-row"><span class="name">East Carolina</span><span class="rec">7-3 (AAC)</span></div><div class="win-bar"><div class="win-fill" style="width:70%"></div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><h2>Marquee Matchups — Closest Projected Games</h2><div class="rule"></div></div>
+  <div class="matchup-list">
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">Tennessee</div><div class="matchup-conf-tag">SEC</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 7</div><div class="matchup-spread">Pick'em<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">Alabama</div><div class="matchup-conf-tag">SEC</div></div>
+    </div>
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">LSU</div><div class="matchup-conf-tag">SEC</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 11</div><div class="matchup-spread">LSU -1.1<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">Texas</div><div class="matchup-conf-tag">SEC</div></div>
+    </div>
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">Penn State</div><div class="matchup-conf-tag">Big Ten</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 6</div><div class="matchup-spread">Pick'em<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">USC</div><div class="matchup-conf-tag">Big Ten</div></div>
+    </div>
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">UCF</div><div class="matchup-conf-tag">Big 12</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 9</div><div class="matchup-spread">UCF +0.4<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">Baylor</div><div class="matchup-conf-tag">Big 12</div></div>
+    </div>
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">Penn State</div><div class="matchup-conf-tag">Big Ten</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 10</div><div class="matchup-spread">WASH -1.8<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">Washington</div><div class="matchup-conf-tag">Big Ten</div></div>
+    </div>
+    <div class="matchup-card tossup">
+      <div><div class="matchup-team">Texas A&amp;M</div><div class="matchup-conf-tag">SEC</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 13</div><div class="matchup-spread">A&amp;M +0.6<span class="tossup-badge">tossup</span></div></div>
+      <div style="text-align:right"><div class="matchup-team">Texas</div><div class="matchup-conf-tag">SEC</div></div>
+    </div>
+    <div class="matchup-card">
+      <div><div class="matchup-team">Penn State</div><div class="matchup-conf-tag">Big Ten</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 7</div><div class="matchup-spread">MICH -2.5</div></div>
+      <div style="text-align:right"><div class="matchup-team">Michigan</div><div class="matchup-conf-tag">Big Ten</div></div>
+    </div>
+    <div class="matchup-card">
+      <div><div class="matchup-team">TCU</div><div class="matchup-conf-tag">Big 12</div></div>
+      <div class="matchup-center"><div class="matchup-wk">WK 12</div><div class="matchup-spread">Utah -1.4</div></div>
+      <div style="text-align:right"><div class="matchup-team">Utah</div><div class="matchup-conf-tag">Pac-12</div></div>
+    </div>
+  </div>
+
+  <div class="section-head"><h2>Blowout Watch — Biggest Projected Margins</h2><div class="rule"></div></div>
+  <table class="blowout-table">
+    <thead><tr><th>Wk</th><th>Matchup</th><th>Projected spread</th><th>Win prob</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Ohio State vs Ball State</td><td class="spread-val">OSU -57.8</td><td class="prob-val2">99.9%</td></tr>
+      <tr><td>3</td><td>Ohio State vs Kent State</td><td class="spread-val">OSU -53.1</td><td class="prob-val2">99.9%</td></tr>
+      <tr><td>2</td><td>Ole Miss vs Charlotte</td><td class="spread-val">Ole Miss -49.9</td><td class="prob-val2">99.8%</td></tr>
+      <tr><td>4</td><td>Texas Tech vs Sam Houston</td><td class="spread-val">TTU -49.8</td><td class="prob-val2">99.8%</td></tr>
+      <tr><td>2</td><td>Notre Dame vs Rice</td><td class="spread-val">ND -42.6</td><td class="prob-val2">99.5%</td></tr>
+      <tr><td>1</td><td>Oklahoma vs UTEP</td><td class="spread-val">OU -38.6</td><td class="prob-val2">99.3%</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-head" style="margin-top:3.5rem"><h2>Big Ten — Game-by-Game Schedules</h2><div class="rule"></div></div>
+  <p style="color:var(--text2);font-size:12px;margin-bottom:1.25rem">Margin from selected team's perspective — positive means favored. H = home · @ = away · N = neutral site. Schedules sourced directly from ESPN game data.</p>
+
+  <div class="team-filter">
+    <button class="filter-btn active" onclick="showTeam('Penn State',this)">Penn State</button>
+    <button class="filter-btn" onclick="showTeam('Ohio State',this)">Ohio State</button>
+    <button class="filter-btn" onclick="showTeam('Oregon',this)">Oregon</button>
+    <button class="filter-btn" onclick="showTeam('Indiana',this)">Indiana</button>
+    <button class="filter-btn" onclick="showTeam('Michigan',this)">Michigan</button>
+    <button class="filter-btn" onclick="showTeam('Illinois',this)">Illinois</button>
+    <button class="filter-btn" onclick="showTeam('Iowa',this)">Iowa</button>
+    <button class="filter-btn" onclick="showTeam('USC',this)">USC</button>
+    <button class="filter-btn" onclick="showTeam('Washington',this)">Washington</button>
+    <button class="filter-btn" onclick="showTeam('Minnesota',this)">Minnesota</button>
+    <button class="filter-btn" onclick="showTeam('Nebraska',this)">Nebraska</button>
+    <button class="filter-btn" onclick="showTeam('Maryland',this)">Maryland</button>
+    <button class="filter-btn" onclick="showTeam('Wisconsin',this)">Wisconsin</button>
+    <button class="filter-btn" onclick="showTeam('Northwestern',this)">Northwestern</button>
+    <button class="filter-btn" onclick="showTeam('UCLA',this)">UCLA</button>
+    <button class="filter-btn" onclick="showTeam('Rutgers',this)">Rutgers</button>
+    <button class="filter-btn" onclick="showTeam('Michigan State',this)">Michigan State</button>
+    <button class="filter-btn" onclick="showTeam('Purdue',this)">Purdue</button>
+  </div>
+
+  <div id="scheduleArea"></div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-inner">
+    HefML model · CatBoost + particle filter ensemble (cfbone × blue × gryphon) · SP+, PPA, SBI, talent score, success rate, Elo inputs<br>
+    All records and margins are projections, not actual results · 2026 regular season only · Schedules sourced from ESPN game IDs
+  </div>
+</footer>
+
+<script>
+const schedules={
+"Illinois":{"wins":8,"losses":3,"sp":9.3,"games":[
+{"week":1,"opponent":"UAB","opp_conf":"American Athletic","home":true,"margin":28.4,"win_prob":97.6,"result":"W","neutral":false},
+{"week":2,"opponent":"Duke","opp_conf":"ACC","home":true,"margin":5.3,"win_prob":69.6,"result":"W","neutral":false},
+{"week":4,"opponent":"Ohio State","opp_conf":"Big Ten","home":false,"margin":-24.7,"win_prob":4.2,"result":"L","neutral":false},
+{"week":5,"opponent":"Purdue","opp_conf":"Big Ten","home":true,"margin":13.8,"win_prob":86.8,"result":"W","neutral":false},
+{"week":6,"opponent":"Michigan State","opp_conf":"Big Ten","home":false,"margin":6.1,"win_prob":67.6,"result":"W","neutral":false},
+{"week":8,"opponent":"Oregon","opp_conf":"Big Ten","home":true,"margin":-17.0,"win_prob":12.0,"result":"L","neutral":false},
+{"week":9,"opponent":"Maryland","opp_conf":"Big Ten","home":false,"margin":3.4,"win_prob":59.6,"result":"W","neutral":false},
+{"week":10,"opponent":"Nebraska","opp_conf":"Big Ten","home":true,"margin":3.3,"win_prob":63.7,"result":"W","neutral":false},
+{"week":11,"opponent":"UCLA","opp_conf":"Big Ten","home":false,"margin":1.6,"win_prob":54.0,"result":"W","neutral":false},
+{"week":12,"opponent":"Iowa","opp_conf":"Big Ten","home":true,"margin":-2.6,"win_prob":45.4,"result":"L","neutral":false},
+{"week":13,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":6.5,"win_prob":71.4,"result":"W","neutral":false}
+]},
+"Indiana":{"wins":10,"losses":1,"sp":24.5,"games":[
+{"week":1,"opponent":"North Texas","opp_conf":"American Athletic","home":true,"margin":36.8,"win_prob":99.2,"result":"W","neutral":false},
+{"week":3,"opponent":"Western Kentucky","opp_conf":"Conference USA","home":true,"margin":31.8,"win_prob":98.4,"result":"W","neutral":false},
+{"week":4,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":22.2,"win_prob":94.2,"result":"W","neutral":false},
+{"week":5,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":20.7,"win_prob":92.0,"result":"W","neutral":false},
+{"week":6,"opponent":"Nebraska","opp_conf":"Big Ten","home":false,"margin":14.7,"win_prob":85.1,"result":"W","neutral":false},
+{"week":7,"opponent":"Ohio State","opp_conf":"Big Ten","home":true,"margin":-4.7,"win_prob":36.1,"result":"L","neutral":false},
+{"week":8,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":6.5,"win_prob":66.2,"result":"W","neutral":false},
+{"week":9,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":21.4,"win_prob":93.6,"result":"W","neutral":false},
+{"week":11,"opponent":"USC","opp_conf":"Big Ten","home":true,"margin":9.1,"win_prob":77.2,"result":"W","neutral":false},
+{"week":12,"opponent":"Washington","opp_conf":"Big Ten","home":false,"margin":7.2,"win_prob":70.6,"result":"W","neutral":false},
+{"week":13,"opponent":"Purdue","opp_conf":"Big Ten","home":true,"margin":29.5,"win_prob":97.7,"result":"W","neutral":false}
+]},
+"Iowa":{"wins":8,"losses":3,"sp":13.6,"games":[
+{"week":1,"opponent":"Northern Illinois","opp_conf":"Mountain West","home":true,"margin":33.4,"win_prob":98.7,"result":"W","neutral":false},
+{"week":2,"opponent":"Iowa State","opp_conf":"Big 12","home":true,"margin":14.5,"win_prob":87.5,"result":"W","neutral":false},
+{"week":4,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":-4.4,"win_prob":34.0,"result":"L","neutral":false},
+{"week":5,"opponent":"Ohio State","opp_conf":"Big Ten","home":true,"margin":-15.6,"win_prob":12.9,"result":"L","neutral":false},
+{"week":6,"opponent":"Washington","opp_conf":"Big Ten","home":false,"margin":-3.7,"win_prob":38.6,"result":"L","neutral":false},
+{"week":8,"opponent":"Minnesota","opp_conf":"Big Ten","home":false,"margin":6.2,"win_prob":65.8,"result":"W","neutral":false},
+{"week":9,"opponent":"Wisconsin","opp_conf":"Big Ten","home":true,"margin":14.7,"win_prob":85.8,"result":"W","neutral":false},
+{"week":10,"opponent":"Northwestern","opp_conf":"Big Ten","home":false,"margin":6.9,"win_prob":68.1,"result":"W","neutral":true},
+{"week":11,"opponent":"Purdue","opp_conf":"Big Ten","home":true,"margin":18.5,"win_prob":91.7,"result":"W","neutral":false},
+{"week":12,"opponent":"Illinois","opp_conf":"Big Ten","home":false,"margin":2.6,"win_prob":54.6,"result":"W","neutral":false},
+{"week":13,"opponent":"Nebraska","opp_conf":"Big Ten","home":true,"margin":8.1,"win_prob":74.8,"result":"W","neutral":false}
+]},
+"Maryland":{"wins":5,"losses":6,"sp":3.8,"games":[
+{"week":2,"opponent":"UConn","opp_conf":"FBS Independents","home":false,"margin":11.2,"win_prob":81.5,"result":"W","neutral":false},
+{"week":3,"opponent":"Virginia Tech","opp_conf":"ACC","home":true,"margin":-3.5,"win_prob":39.4,"result":"L","neutral":false},
+{"week":4,"opponent":"UCLA","opp_conf":"Big Ten","home":true,"margin":0.4,"win_prob":52.8,"result":"W","neutral":false},
+{"week":5,"opponent":"Nebraska","opp_conf":"Big Ten","home":false,"margin":-6.6,"win_prob":29.8,"result":"L","neutral":false},
+{"week":6,"opponent":"Ohio State","opp_conf":"Big Ten","home":false,"margin":-30.3,"win_prob":2.1,"result":"L","neutral":false},
+{"week":7,"opponent":"Rutgers","opp_conf":"Big Ten","home":true,"margin":3.8,"win_prob":62.7,"result":"W","neutral":false},
+{"week":9,"opponent":"Illinois","opp_conf":"Big Ten","home":true,"margin":-3.4,"win_prob":40.4,"result":"L","neutral":false},
+{"week":10,"opponent":"Purdue","opp_conf":"Big Ten","home":false,"margin":3.8,"win_prob":61.3,"result":"W","neutral":false},
+{"week":11,"opponent":"Wisconsin","opp_conf":"Big Ten","home":true,"margin":4.4,"win_prob":63.3,"result":"W","neutral":false},
+{"week":12,"opponent":"USC","opp_conf":"Big Ten","home":false,"margin":-16.6,"win_prob":11.3,"result":"L","neutral":false},
+{"week":13,"opponent":"Penn State","opp_conf":"Big Ten","home":true,"margin":-10.0,"win_prob":24.0,"result":"L","neutral":false}
+]},
+"Michigan":{"wins":9,"losses":3,"sp":16.1,"games":[
+{"week":1,"opponent":"Western Michigan","opp_conf":"Mid-American","home":true,"margin":25.0,"win_prob":96.2,"result":"W","neutral":false},
+{"week":2,"opponent":"Oklahoma","opp_conf":"SEC","home":true,"margin":1.4,"win_prob":56.7,"result":"W","neutral":false},
+{"week":3,"opponent":"UTEP","opp_conf":"Mountain West","home":true,"margin":37.8,"win_prob":99.2,"result":"W","neutral":false},
+{"week":4,"opponent":"Iowa","opp_conf":"Big Ten","home":true,"margin":4.4,"win_prob":66.0,"result":"W","neutral":false},
+{"week":5,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":8.3,"win_prob":72.8,"result":"W","neutral":false},
+{"week":7,"opponent":"Penn State","opp_conf":"Big Ten","home":true,"margin":2.5,"win_prob":60.6,"result":"W","neutral":false},
+{"week":8,"opponent":"Indiana","opp_conf":"Big Ten","home":true,"margin":-6.5,"win_prob":33.8,"result":"L","neutral":false},
+{"week":9,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":12.0,"win_prob":80.5,"result":"W","neutral":false},
+{"week":10,"opponent":"Michigan State","opp_conf":"Big Ten","home":true,"margin":17.4,"win_prob":90.6,"result":"W","neutral":false},
+{"week":11,"opponent":"Oregon","opp_conf":"Big Ten","home":false,"margin":-14.4,"win_prob":13.8,"result":"L","neutral":false},
+{"week":12,"opponent":"UCLA","opp_conf":"Big Ten","home":true,"margin":13.0,"win_prob":84.5,"result":"W","neutral":false},
+{"week":13,"opponent":"Ohio State","opp_conf":"Big Ten","home":false,"margin":-17.8,"win_prob":9.3,"result":"L","neutral":false}
+]},
+"Michigan State":{"wins":2,"losses":10,"sp":0.4,"games":[
+{"week":1,"opponent":"Toledo","opp_conf":"Mid-American","home":true,"margin":13.9,"win_prob":87.4,"result":"W","neutral":false},
+{"week":2,"opponent":"Eastern Michigan","opp_conf":"Mid-American","home":true,"margin":16.5,"win_prob":91.3,"result":"W","neutral":false},
+{"week":3,"opponent":"Notre Dame","opp_conf":"FBS Independents","home":false,"margin":-27.6,"win_prob":3.0,"result":"L","neutral":false},
+{"week":4,"opponent":"Nebraska","opp_conf":"Big Ten","home":true,"margin":-4.9,"win_prob":37.4,"result":"L","neutral":false},
+{"week":5,"opponent":"Wisconsin","opp_conf":"Big Ten","home":false,"margin":-2.7,"win_prob":38.2,"result":"L","neutral":false},
+{"week":6,"opponent":"Illinois","opp_conf":"Big Ten","home":true,"margin":-6.1,"win_prob":32.4,"result":"L","neutral":false},
+{"week":7,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":-1.7,"win_prob":46.0,"result":"L","neutral":false},
+{"week":8,"opponent":"UCLA","opp_conf":"Big Ten","home":false,"margin":-6.6,"win_prob":28.6,"result":"L","neutral":false},
+{"week":10,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":-17.4,"win_prob":9.4,"result":"L","neutral":false},
+{"week":11,"opponent":"Washington","opp_conf":"Big Ten","home":true,"margin":-12.4,"win_prob":20.1,"result":"L","neutral":false},
+{"week":12,"opponent":"Oregon","opp_conf":"Big Ten","home":true,"margin":-25.3,"win_prob":4.4,"result":"L","neutral":false},
+{"week":13,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":-3.2,"win_prob":37.6,"result":"L","neutral":false}
+]},
+"Minnesota":{"wins":6,"losses":5,"sp":5.2,"games":[
+{"week":2,"opponent":"Mississippi State","opp_conf":"SEC","home":true,"margin":3.5,"win_prob":64.0,"result":"W","neutral":false},
+{"week":3,"opponent":"Akron","opp_conf":"Mid-American","home":true,"margin":26.0,"win_prob":97.1,"result":"W","neutral":false},
+{"week":4,"opponent":"Washington","opp_conf":"Big Ten","home":false,"margin":-12.1,"win_prob":18.8,"result":"L","neutral":false},
+{"week":5,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":-8.3,"win_prob":27.2,"result":"L","neutral":false},
+{"week":6,"opponent":"Purdue","opp_conf":"Big Ten","home":false,"margin":5.8,"win_prob":67.2,"result":"W","neutral":false},
+{"week":8,"opponent":"Iowa","opp_conf":"Big Ten","home":true,"margin":-6.2,"win_prob":34.2,"result":"L","neutral":false},
+{"week":9,"opponent":"Indiana","opp_conf":"Big Ten","home":false,"margin":-21.4,"win_prob":6.4,"result":"L","neutral":false},
+{"week":10,"opponent":"UCLA","opp_conf":"Big Ten","home":true,"margin":2.4,"win_prob":59.2,"result":"W","neutral":false},
+{"week":11,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-12.4,"win_prob":17.1,"result":"L","neutral":false},
+{"week":12,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":3.0,"win_prob":60.9,"result":"W","neutral":false},
+{"week":13,"opponent":"Wisconsin","opp_conf":"Big Ten","home":false,"margin":2.0,"win_prob":53.0,"result":"W","neutral":false}
+]},
+"Nebraska":{"wins":5,"losses":6,"sp":7.7,"games":[
+{"week":1,"opponent":"Ohio","opp_conf":"Mid-American","home":true,"margin":21.9,"win_prob":95.2,"result":"W","neutral":false},
+{"week":2,"opponent":"Bowling Green","opp_conf":"Mid-American","home":true,"margin":22.4,"win_prob":95.4,"result":"W","neutral":false},
+{"week":4,"opponent":"Michigan State","opp_conf":"Big Ten","home":false,"margin":4.9,"win_prob":62.6,"result":"W","neutral":false},
+{"week":5,"opponent":"Maryland","opp_conf":"Big Ten","home":true,"margin":6.6,"win_prob":70.2,"result":"W","neutral":false},
+{"week":6,"opponent":"Indiana","opp_conf":"Big Ten","home":true,"margin":-14.7,"win_prob":14.9,"result":"L","neutral":false},
+{"week":7,"opponent":"Oregon","opp_conf":"Big Ten","home":false,"margin":-22.5,"win_prob":5.2,"result":"L","neutral":false},
+{"week":9,"opponent":"Washington","opp_conf":"Big Ten","home":true,"margin":-5.3,"win_prob":37.2,"result":"L","neutral":false},
+{"week":10,"opponent":"Illinois","opp_conf":"Big Ten","home":false,"margin":-3.3,"win_prob":36.3,"result":"L","neutral":false},
+{"week":11,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":3.8,"win_prob":58.7,"result":"W","neutral":false},
+{"week":12,"opponent":"Ohio State","opp_conf":"Big Ten","home":true,"margin":-21.5,"win_prob":6.5,"result":"L","neutral":false},
+{"week":13,"opponent":"Iowa","opp_conf":"Big Ten","home":false,"margin":-8.1,"win_prob":25.2,"result":"L","neutral":false}
+]},
+"Northwestern":{"wins":4,"losses":7,"sp":4.6,"games":[
+{"week":3,"opponent":"Colorado","opp_conf":"Big 12","home":true,"margin":5.6,"win_prob":69.5,"result":"W","neutral":false},
+{"week":4,"opponent":"Indiana","opp_conf":"Big Ten","home":false,"margin":-22.2,"win_prob":5.8,"result":"L","neutral":false},
+{"week":5,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-8.8,"win_prob":27.0,"result":"L","neutral":true},
+{"week":6,"opponent":"Ball State","opp_conf":"Mid-American","home":false,"margin":30.9,"win_prob":98.4,"result":"W","neutral":true},
+{"week":7,"opponent":"Michigan State","opp_conf":"Big Ten","home":false,"margin":1.7,"win_prob":54.0,"result":"W","neutral":false},
+{"week":8,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":5.0,"win_prob":66.4,"result":"W","neutral":true},
+{"week":9,"opponent":"Oregon","opp_conf":"Big Ten","home":false,"margin":-25.7,"win_prob":3.7,"result":"L","neutral":false},
+{"week":10,"opponent":"Iowa","opp_conf":"Big Ten","home":false,"margin":-6.9,"win_prob":31.9,"result":"L","neutral":true},
+{"week":11,"opponent":"Ohio State","opp_conf":"Big Ten","home":false,"margin":-29.1,"win_prob":2.4,"result":"L","neutral":false},
+{"week":12,"opponent":"Minnesota","opp_conf":"Big Ten","home":false,"margin":-3.0,"win_prob":39.1,"result":"L","neutral":false},
+{"week":13,"opponent":"Illinois","opp_conf":"Big Ten","home":false,"margin":-6.5,"win_prob":28.6,"result":"L","neutral":false}
+]},
+"Ohio State":{"wins":12,"losses":0,"sp":31.8,"games":[
+{"week":1,"opponent":"Ball State","opp_conf":"Mid-American","home":true,"margin":57.8,"win_prob":99.9,"result":"W","neutral":false},
+{"week":2,"opponent":"Texas","opp_conf":"SEC","home":false,"margin":6.4,"win_prob":66.1,"result":"W","neutral":false},
+{"week":3,"opponent":"Kent State","opp_conf":"Mid-American","home":true,"margin":53.1,"win_prob":99.9,"result":"W","neutral":false},
+{"week":4,"opponent":"Illinois","opp_conf":"Big Ten","home":true,"margin":24.7,"win_prob":95.8,"result":"W","neutral":false},
+{"week":5,"opponent":"Iowa","opp_conf":"Big Ten","home":false,"margin":15.6,"win_prob":87.1,"result":"W","neutral":false},
+{"week":6,"opponent":"Maryland","opp_conf":"Big Ten","home":true,"margin":30.3,"win_prob":97.9,"result":"W","neutral":false},
+{"week":7,"opponent":"Indiana","opp_conf":"Big Ten","home":false,"margin":4.7,"win_prob":63.9,"result":"W","neutral":false},
+{"week":9,"opponent":"USC","opp_conf":"Big Ten","home":false,"margin":11.5,"win_prob":81.0,"result":"W","neutral":false},
+{"week":10,"opponent":"Oregon","opp_conf":"Big Ten","home":true,"margin":5.5,"win_prob":68.7,"result":"W","neutral":false},
+{"week":11,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":29.1,"win_prob":97.6,"result":"W","neutral":false},
+{"week":12,"opponent":"Nebraska","opp_conf":"Big Ten","home":false,"margin":21.5,"win_prob":93.5,"result":"W","neutral":false},
+{"week":13,"opponent":"Michigan","opp_conf":"Big Ten","home":true,"margin":17.8,"win_prob":90.7,"result":"W","neutral":false}
+]},
+"Oregon":{"wins":10,"losses":1,"sp":28.3,"games":[
+{"week":1,"opponent":"Boise State","opp_conf":"Pac-12","home":true,"margin":23.3,"win_prob":95.1,"result":"W","neutral":false},
+{"week":2,"opponent":"Oklahoma State","opp_conf":"Big 12","home":false,"margin":19.8,"win_prob":90.4,"result":"W","neutral":false},
+{"week":4,"opponent":"USC","opp_conf":"Big Ten","home":false,"margin":8.2,"win_prob":73.3,"result":"W","neutral":false},
+{"week":6,"opponent":"UCLA","opp_conf":"Big Ten","home":true,"margin":25.2,"win_prob":96.0,"result":"W","neutral":false},
+{"week":7,"opponent":"Nebraska","opp_conf":"Big Ten","home":true,"margin":22.5,"win_prob":94.8,"result":"W","neutral":false},
+{"week":8,"opponent":"Illinois","opp_conf":"Big Ten","home":false,"margin":17.0,"win_prob":88.0,"result":"W","neutral":false},
+{"week":9,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":25.7,"win_prob":96.3,"result":"W","neutral":false},
+{"week":10,"opponent":"Ohio State","opp_conf":"Big Ten","home":false,"margin":-5.5,"win_prob":31.3,"result":"L","neutral":false},
+{"week":11,"opponent":"Michigan","opp_conf":"Big Ten","home":true,"margin":14.4,"win_prob":86.2,"result":"W","neutral":false},
+{"week":12,"opponent":"Michigan State","opp_conf":"Big Ten","home":false,"margin":25.3,"win_prob":95.6,"result":"W","neutral":false},
+{"week":13,"opponent":"Washington","opp_conf":"Big Ten","home":true,"margin":15.1,"win_prob":88.4,"result":"W","neutral":false}
+]},
+"Penn State":{"wins":10,"losses":2,"sp":15.7,"games":[
+{"week":1,"opponent":"Marshall","opp_conf":"Sun Belt","home":true,"margin":23.6,"win_prob":95.6,"result":"W","neutral":false},
+{"week":2,"opponent":"Temple","opp_conf":"American Athletic","home":false,"margin":22.2,"win_prob":93.3,"result":"W","neutral":false},
+{"week":3,"opponent":"Buffalo","opp_conf":"Mid-American","home":true,"margin":29.0,"win_prob":97.8,"result":"W","neutral":false},
+{"week":4,"opponent":"Wisconsin","opp_conf":"Big Ten","home":true,"margin":16.6,"win_prob":88.5,"result":"W","neutral":false},
+{"week":5,"opponent":"Northwestern","opp_conf":"Big Ten","home":true,"margin":8.8,"win_prob":73.0,"result":"W","neutral":true},
+{"week":6,"opponent":"USC","opp_conf":"Big Ten","home":true,"margin":0.0,"win_prob":52.9,"result":"W","neutral":false},
+{"week":7,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":-2.5,"win_prob":39.4,"result":"L","neutral":false},
+{"week":9,"opponent":"Purdue","opp_conf":"Big Ten","home":true,"margin":20.4,"win_prob":93.3,"result":"W","neutral":false},
+{"week":10,"opponent":"Washington","opp_conf":"Big Ten","home":false,"margin":-1.8,"win_prob":44.3,"result":"L","neutral":false},
+{"week":11,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":12.4,"win_prob":82.9,"result":"W","neutral":false},
+{"week":12,"opponent":"Rutgers","opp_conf":"Big Ten","home":true,"margin":16.0,"win_prob":88.2,"result":"W","neutral":false},
+{"week":13,"opponent":"Maryland","opp_conf":"Big Ten","home":false,"margin":10.0,"win_prob":76.0,"result":"W","neutral":false}
+]},
+"Purdue":{"wins":0,"losses":11,"sp":-2.9,"games":[
+{"week":2,"opponent":"Wake Forest","opp_conf":"ACC","home":true,"margin":-3.9,"win_prob":39.6,"result":"L","neutral":false},
+{"week":3,"opponent":"UCLA","opp_conf":"Big Ten","home":false,"margin":-10.0,"win_prob":20.3,"result":"L","neutral":false},
+{"week":4,"opponent":"Notre Dame","opp_conf":"FBS Independents","home":true,"margin":-26.5,"win_prob":3.8,"result":"L","neutral":false},
+{"week":5,"opponent":"Illinois","opp_conf":"Big Ten","home":false,"margin":-13.8,"win_prob":13.2,"result":"L","neutral":false},
+{"week":6,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":-5.8,"win_prob":32.8,"result":"L","neutral":false},
+{"week":7,"opponent":"Washington","opp_conf":"Big Ten","home":true,"margin":-15.7,"win_prob":13.7,"result":"L","neutral":false},
+{"week":9,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-20.4,"win_prob":6.7,"result":"L","neutral":false},
+{"week":10,"opponent":"Maryland","opp_conf":"Big Ten","home":true,"margin":-3.8,"win_prob":38.7,"result":"L","neutral":false},
+{"week":11,"opponent":"Iowa","opp_conf":"Big Ten","home":false,"margin":-18.5,"win_prob":8.3,"result":"L","neutral":false},
+{"week":12,"opponent":"Wisconsin","opp_conf":"Big Ten","home":true,"margin":-1.7,"win_prob":43.6,"result":"L","neutral":false},
+{"week":13,"opponent":"Indiana","opp_conf":"Big Ten","home":false,"margin":-29.5,"win_prob":2.3,"result":"L","neutral":false}
+]},
+"Rutgers":{"wins":2,"losses":8,"sp":1.8,"games":[
+{"week":2,"opponent":"Boston College","opp_conf":"ACC","home":false,"margin":1.0,"win_prob":52.8,"result":"W","neutral":false},
+{"week":3,"opponent":"USC","opp_conf":"Big Ten","home":true,"margin":-13.8,"win_prob":17.4,"result":"L","neutral":false},
+{"week":5,"opponent":"Indiana","opp_conf":"Big Ten","home":true,"margin":-20.7,"win_prob":8.0,"result":"L","neutral":false},
+{"week":7,"opponent":"Maryland","opp_conf":"Big Ten","home":false,"margin":-3.8,"win_prob":37.3,"result":"L","neutral":false},
+{"week":8,"opponent":"Northwestern","opp_conf":"Big Ten","home":false,"margin":-5.0,"win_prob":33.6,"result":"L","neutral":true},
+{"week":9,"opponent":"Michigan","opp_conf":"Big Ten","home":true,"margin":-12.0,"win_prob":19.5,"result":"L","neutral":false},
+{"week":10,"opponent":"Wisconsin","opp_conf":"Big Ten","home":false,"margin":-1.6,"win_prob":42.2,"result":"L","neutral":false},
+{"week":11,"opponent":"Nebraska","opp_conf":"Big Ten","home":true,"margin":-3.8,"win_prob":41.3,"result":"L","neutral":false},
+{"week":12,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-16.0,"win_prob":11.8,"result":"L","neutral":false},
+{"week":13,"opponent":"Michigan State","opp_conf":"Big Ten","home":true,"margin":3.2,"win_prob":62.4,"result":"W","neutral":false}
+]},
+"UCLA":{"wins":5,"losses":7,"sp":5.1,"games":[
+{"week":1,"opponent":"California","opp_conf":"ACC","home":false,"margin":-1.0,"win_prob":46.7,"result":"L","neutral":false},
+{"week":2,"opponent":"San Diego State","opp_conf":"Pac-12","home":true,"margin":8.4,"win_prob":76.5,"result":"W","neutral":false},
+{"week":3,"opponent":"Purdue","opp_conf":"Big Ten","home":true,"margin":10.0,"win_prob":79.7,"result":"W","neutral":false},
+{"week":4,"opponent":"Maryland","opp_conf":"Big Ten","home":false,"margin":-0.4,"win_prob":47.2,"result":"L","neutral":false},
+{"week":6,"opponent":"Oregon","opp_conf":"Big Ten","home":false,"margin":-25.2,"win_prob":4.0,"result":"L","neutral":false},
+{"week":7,"opponent":"Wisconsin","opp_conf":"Big Ten","home":true,"margin":6.1,"win_prob":68.5,"result":"W","neutral":false},
+{"week":8,"opponent":"Michigan State","opp_conf":"Big Ten","home":true,"margin":6.6,"win_prob":71.4,"result":"W","neutral":false},
+{"week":9,"opponent":"Nevada","opp_conf":"Mountain West","home":true,"margin":19.5,"win_prob":92.5,"result":"W","neutral":false},
+{"week":10,"opponent":"Minnesota","opp_conf":"Big Ten","home":false,"margin":-2.4,"win_prob":40.8,"result":"L","neutral":false},
+{"week":11,"opponent":"Illinois","opp_conf":"Big Ten","home":true,"margin":-1.6,"win_prob":46.0,"result":"L","neutral":false},
+{"week":12,"opponent":"Michigan","opp_conf":"Big Ten","home":false,"margin":-13.0,"win_prob":15.5,"result":"L","neutral":false},
+{"week":13,"opponent":"USC","opp_conf":"Big Ten","home":true,"margin":-10.4,"win_prob":24.0,"result":"L","neutral":false}
+]},
+"USC":{"wins":7,"losses":4,"sp":16.8,"games":[
+{"week":1,"opponent":"Fresno State","opp_conf":"Pac-12","home":true,"margin":22.0,"win_prob":94.5,"result":"W","neutral":false},
+{"week":2,"opponent":"Louisiana","opp_conf":"Sun Belt","home":true,"margin":28.4,"win_prob":97.3,"result":"W","neutral":false},
+{"week":3,"opponent":"Rutgers","opp_conf":"Big Ten","home":false,"margin":13.8,"win_prob":82.6,"result":"W","neutral":false},
+{"week":4,"opponent":"Oregon","opp_conf":"Big Ten","home":true,"margin":-8.2,"win_prob":26.7,"result":"L","neutral":false},
+{"week":5,"opponent":"Washington","opp_conf":"Big Ten","home":true,"margin":4.7,"win_prob":66.4,"result":"W","neutral":false},
+{"week":6,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-0.0,"win_prob":47.1,"result":"L","neutral":false},
+{"week":8,"opponent":"Wisconsin","opp_conf":"Big Ten","home":false,"margin":14.4,"win_prob":83.0,"result":"W","neutral":false},
+{"week":9,"opponent":"Ohio State","opp_conf":"Big Ten","home":true,"margin":-11.5,"win_prob":19.0,"result":"L","neutral":false},
+{"week":11,"opponent":"Indiana","opp_conf":"Big Ten","home":false,"margin":-9.1,"win_prob":22.8,"result":"L","neutral":false},
+{"week":12,"opponent":"Maryland","opp_conf":"Big Ten","home":true,"margin":16.6,"win_prob":88.7,"result":"W","neutral":false},
+{"week":13,"opponent":"UCLA","opp_conf":"Big Ten","home":false,"margin":10.4,"win_prob":76.0,"result":"W","neutral":false}
+]},
+"Washington":{"wins":8,"losses":3,"sp":14.5,"games":[
+{"week":1,"opponent":"Washington State","opp_conf":"Pac-12","home":true,"margin":22.1,"win_prob":94.5,"result":"W","neutral":false},
+{"week":2,"opponent":"Utah State","opp_conf":"Pac-12","home":true,"margin":24.5,"win_prob":95.6,"result":"W","neutral":false},
+{"week":4,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":12.1,"win_prob":81.2,"result":"W","neutral":false},
+{"week":5,"opponent":"USC","opp_conf":"Big Ten","home":false,"margin":-4.7,"win_prob":33.6,"result":"L","neutral":false},
+{"week":6,"opponent":"Iowa","opp_conf":"Big Ten","home":true,"margin":3.7,"win_prob":61.4,"result":"W","neutral":false},
+{"week":7,"opponent":"Purdue","opp_conf":"Big Ten","home":false,"margin":15.7,"win_prob":86.3,"result":"W","neutral":false},
+{"week":9,"opponent":"Nebraska","opp_conf":"Big Ten","home":false,"margin":5.3,"win_prob":62.8,"result":"W","neutral":false},
+{"week":10,"opponent":"Penn State","opp_conf":"Big Ten","home":true,"margin":1.8,"win_prob":55.7,"result":"W","neutral":false},
+{"week":11,"opponent":"Michigan State","opp_conf":"Big Ten","home":false,"margin":12.4,"win_prob":79.9,"result":"W","neutral":false},
+{"week":12,"opponent":"Indiana","opp_conf":"Big Ten","home":true,"margin":-7.2,"win_prob":29.4,"result":"L","neutral":false},
+{"week":13,"opponent":"Oregon","opp_conf":"Big Ten","home":false,"margin":-15.1,"win_prob":11.6,"result":"L","neutral":false}
+]},
+"Wisconsin":{"wins":4,"losses":7,"sp":1.8,"games":[
+{"week":1,"opponent":"Notre Dame","opp_conf":"FBS Independents","home":false,"margin":-22.7,"win_prob":6.7,"result":"L","neutral":true},
+{"week":3,"opponent":"Eastern Michigan","opp_conf":"Mid-American","home":true,"margin":17.0,"win_prob":92.3,"result":"W","neutral":false},
+{"week":4,"opponent":"Penn State","opp_conf":"Big Ten","home":false,"margin":-16.6,"win_prob":11.5,"result":"L","neutral":false},
+{"week":5,"opponent":"Michigan State","opp_conf":"Big Ten","home":true,"margin":2.7,"win_prob":61.8,"result":"W","neutral":false},
+{"week":7,"opponent":"UCLA","opp_conf":"Big Ten","home":false,"margin":-6.1,"win_prob":31.5,"result":"L","neutral":false},
+{"week":8,"opponent":"USC","opp_conf":"Big Ten","home":true,"margin":-14.4,"win_prob":17.0,"result":"L","neutral":false},
+{"week":9,"opponent":"Iowa","opp_conf":"Big Ten","home":false,"margin":-14.7,"win_prob":14.2,"result":"L","neutral":false},
+{"week":10,"opponent":"Rutgers","opp_conf":"Big Ten","home":true,"margin":1.6,"win_prob":57.8,"result":"W","neutral":false},
+{"week":11,"opponent":"Maryland","opp_conf":"Big Ten","home":false,"margin":-4.4,"win_prob":36.7,"result":"L","neutral":false},
+{"week":12,"opponent":"Purdue","opp_conf":"Big Ten","home":false,"margin":1.7,"win_prob":56.4,"result":"W","neutral":false},
+{"week":13,"opponent":"Minnesota","opp_conf":"Big Ten","home":true,"margin":-2.0,"win_prob":47.0,"result":"L","neutral":false}
+]}
+};
+
+const spColor=s=>s>=20?'#97C459':s>=10?'#EF9F27':s>=0?'#9a9690':'#F09595';
+
+function buildScheduleHTML(team){
+  const d=schedules[team];
+  if(!d)return'<p style="color:var(--text2)">No data.</p>';
+  const sp=d.sp,spStr=(sp>0?'+':'')+sp;
+  const rows=d.games.map(g=>{
+    const isB10=g.opp_conf==='Big Ten';
+    const loc=g.neutral?'N':(g.home?'H':'@');
+    const locCol=g.neutral?'var(--text2)':(g.home?'var(--gold)':'var(--text3)');
+    const mStr=(g.margin>0?'+':'')+g.margin.toFixed(1);
+    const abs=Math.abs(g.margin);
+    const mCls=g.result==='W'?(abs>2?'m-pos':'m-close'):(abs>2?'m-neg':'m-close');
+    const bw=Math.min(100,Math.max(2,g.win_prob)).toFixed(0);
+    const bCls=g.result==='W'?'p-win':'p-loss';
+    const badge=g.result==='W'?'<span class="result-w">W</span>':'<span class="result-l">L</span>';
+    const b10=isB10?'<span class="b10-tag">B10</span>':'';
+    return`<tr>
+      <td class="wk-cell">${g.week}</td>
+      <td class="loc-cell" style="color:${locCol}">${loc}</td>
+      <td class="opp-cell">${g.opponent}${b10}</td>
+      <td class="opp-conf-cell">${g.opp_conf}</td>
+      <td class="margin-cell ${mCls}">${mStr}</td>
+      <td class="prob-cell"><div class="prob-bar-wrap"><div class="prob-bar-bg"><div class="prob-bar-fill ${bCls}" style="width:${bw}%"></div></div><span class="prob-val">${g.win_prob.toFixed(1)}%</span></div></td>
+      <td class="result-cell">${badge}</td>
+    </tr>`;
+  }).join('');
+  return`<div class="sched-header">
+    <div>
+      <div class="sched-team-name">${team}</div>
+      <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px">Big Ten Conference</div>
+    </div>
+    <div class="sched-meta">
+      <span class="sched-record">${d.wins}-${d.losses}</span>
+      <span style="font-family:var(--mono);font-size:13px;color:${spColor(sp)}">SP+ ${spStr}</span>
+    </div>
+  </div>
+  <table class="sched-table">
+    <thead><tr><th>Wk</th><th></th><th>Opponent</th><th>Conf</th><th style="text-align:right">Proj margin</th><th>Win prob</th><th>Proj</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function showTeam(team,btn){
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('scheduleArea').innerHTML=buildScheduleHTML(team);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('scheduleArea').innerHTML=buildScheduleHTML('Penn State');
+});
+</script>
+</body>
+</html>
